@@ -126,7 +126,7 @@ function update ()
         return;
     }
 
-    let move = "none";
+    let move = null;
     let jump = false;
 
     if (cursors.left.isDown)
@@ -151,16 +151,17 @@ function update ()
     const boundTop = Math.floor(config.height*.50);
 
     const pointers = [
+        this.input.activePointer,
         this.input.pointer1,
         this.input.pointer2,
         this.input.pointer3,
         this.input.pointer4,
     ];
-    for ( const pointer in pointers)
+    for (const pointer in pointers)
     {
         if (pointer.isDown) {
-            let touchX = pointer.x;
-            let touchY = pointer.y;
+            const touchX = pointer.x;
+            const touchY = pointer.y;
             if (touchX < boundLft)
                 move = "left";
             else if (touchX > boundRgt)
