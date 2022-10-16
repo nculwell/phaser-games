@@ -153,7 +153,7 @@ function update ()
             move = "left";
         else if (touchX > player.x)
             move = "right";
-        if (touchY > player.y)
+        if (touchY < player.y)
             jump = true;
     }
 
@@ -211,11 +211,8 @@ function collectStar (player, star)
 function hitBomb (player, bomb)
 {
     this.physics.pause();
-
     player.setTint(0xff0000);
-
     player.anims.play('turn');
-
     gameOver = true;
 }
 
