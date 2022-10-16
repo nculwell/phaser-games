@@ -36,8 +36,6 @@ function preload ()
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.plugin('rexvirtualjoystickplugin',
-        'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js', true);
 }
 
 function create ()
@@ -117,35 +115,7 @@ function create ()
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 
-    //var joystick = this.plugins.get('rexvirtualjoystickplugin').addPlayer(this, config);
 
-    this.joystick = (this.plugins
-        .get('rexVirtualJoystick')
-        .add(this, {
-            x: 300,
-            y: 500,
-            radius: 100,
-            //base: baseGameObject,
-            //thumb: thumbGameObject,
-            // dir: '8dir',
-            // forceMin: 16,
-            // fixed: true,
-            // enable: true
-        })
-        .on('update', this.updateJoystick())
-    );
-
-    updateJoystick();
-}
-
-function updateJoystick()
-{
-    const cursorKeys = this.joystick.createCursorKeys();
-    for (const name in cursorKeys)
-    {
-        if (cursorKeys[name].isDown) {
-        }
-    }
 }
 
 function update ()
@@ -175,17 +145,17 @@ function update ()
         }
     }
 
-    //let pointer = this.input.activePointer;
-    //if (pointer.isDown) {
-    //    let touchX = pointer.x;
-    //    let touchY = pointer.y;
-    //    if (touchX < player.x)
-    //        move = "left";
-    //    else if (touchX > player.x)
-    //        move = "right";
-    //    if (touchY > player.y)
-    //        jump = true;
-    //}
+    let pointer = this.input.activePointer;
+    if (pointer.isDown) {
+        let touchX = pointer.x;
+        let touchY = pointer.y;
+        if (touchX < player.x)
+            move = "left";
+        else if (touchX > player.x)
+            move = "right";
+        if (touchY > player.y)
+            jump = true;
+    }
 
     if (move == "left")
     {
