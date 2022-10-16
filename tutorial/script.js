@@ -85,6 +85,7 @@ function create ()
 
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
+    this.input.addPointer(3); // 4-touch
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
@@ -149,19 +150,27 @@ function update ()
     const boundRgt = Math.floor(config.width*.70);
     const boundTop = Math.floor(config.height*.30);
 
-    let pointer = this.input.activePointer;
-    if (pointer.isDown) {
-        let touchX = pointer.x;
-        let touchY = pointer.y;
-        if (touchX < boundLft)
-            move = "left";
-        else if (touchX > boundRgt)
-            move = "right";
-        if (touchY < boundTop
-            && touchX > boundLft
-            && touchX < boundRgt)
-        {
-            jump = true;
+    const pointers = [
+        this.input.pointer1,
+        this.input.pointer2,
+        this.input.pointer3,
+        this.input.pointer4,
+    ];
+    for ( const pointer in pointers)
+    {
+        if (pointer.isDown) {
+            let touchX = pointer.x;
+            let touchY = pointer.y;
+            if (touchX < boundLft)
+                move = "left";
+            else if (touchX > boundRgt)
+                move = "right";
+            if (touchY < boundTop
+                && touchX > boundLft
+                && touchX < boundRgt)
+            {
+                jump = true;
+            }
         }
     }
 
