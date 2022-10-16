@@ -145,9 +145,9 @@ function update ()
         }
     }
 
-    const boundLft = Math.Floor(config.width*.30);
-    const boundRgt = Math.Floor(config.width*.70);
-    const boundTop = Math.Floor(config.height*.30);
+    const boundLft = Math.floor(config.width*.30);
+    const boundRgt = Math.floor(config.width*.70);
+    const boundTop = Math.floor(config.height*.30);
 
     let pointer = this.input.activePointer;
     if (pointer.isDown) {
