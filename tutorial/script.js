@@ -119,7 +119,7 @@ function create ()
 
     //var joystick = this.plugins.get('rexvirtualjoystickplugin').addPlayer(this, config);
 
-    var joystick = scene.plugins.get('rexVirtualJoystick').add(scene, {
+    var joystick = this.plugins.get('rexVirtualJoystick').add(this, {
         x: 200,
         y: 200,
         radius: 100,
