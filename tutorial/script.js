@@ -159,7 +159,7 @@ function update ()
         }
     }
 
-    //let pointer = scene.input.activePointer;
+    //let pointer = this.input.activePointer;
     //if (pointer.isDown) {
     //    let touchX = pointer.x;
     //    let touchY = pointer.y;
