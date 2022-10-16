@@ -119,17 +119,33 @@ function create ()
 
     //var joystick = this.plugins.get('rexvirtualjoystickplugin').addPlayer(this, config);
 
-    var joystick = this.plugins.get('rexVirtualJoystick').add(this, {
-        x: 200,
-        y: 200,
-        radius: 100,
-        //base: baseGameObject,
-        //thumb: thumbGameObject,
-        // dir: '8dir',
-        // forceMin: 16,
-        // fixed: true,
-        // enable: true
-    });
+    this.joystick = (this.plugins
+        .get('rexVirtualJoystick')
+        .add(this, {
+            x: 300,
+            y: 500,
+            radius: 100,
+            //base: baseGameObject,
+            //thumb: thumbGameObject,
+            // dir: '8dir',
+            // forceMin: 16,
+            // fixed: true,
+            // enable: true
+        })
+        .on('update', this.updateJoystick())
+    );
+
+    updateJoystick();
+}
+
+function updateJoystick()
+{
+    const cursorKeys = this.joystick.createCursorKeys();
+    for (const name in cursorKeys)
+    {
+        if (cursorKeys[name].isDown) {
+        }
+    }
 }
 
 function update ()
@@ -206,12 +222,12 @@ function collectStar (player, star)
     {
         //  A new batch of stars to collect
         stars.children.iterate(function (child) {
-
             child.enableBody(true, child.x, 0, true, true);
-
         });
 
-        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+        var x = (player.x < 400)
+            ? Phaser.Math.Between(400, 800)
+            : Phaser.Math.Between(0, 400);
 
         var bomb = bombs.create(x, 16, 'bomb');
         bomb.setBounce(1);
