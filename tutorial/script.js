@@ -166,7 +166,7 @@ function update ()
                 move = "left";
             else if (touchX > boundRgt)
                 move = "right";
-            if (touchY < boundTop
+            if (true // touchY < boundTop
                 && touchX > boundLft
                 && touchX < boundRgt)
             {
