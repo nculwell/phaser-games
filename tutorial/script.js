@@ -148,7 +148,7 @@ function update ()
 
     const boundLft = Math.floor(config.width*.30);
     const boundRgt = Math.floor(config.width*.70);
-    const boundTop = Math.floor(config.height*.30);
+    const boundTop = Math.floor(config.height*.50);
 
     const pointers = [
         this.input.pointer1,
