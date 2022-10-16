@@ -1,6 +1,6 @@
 // vim: et ts=8 sts=4 sw=4
 
-var config = {
+const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
@@ -145,16 +145,24 @@ function update ()
         }
     }
 
+    const boundLft = Math.Floor(config.width*.30);
+    const boundRgt = Math.Floor(config.width*.70);
+    const boundTop = Math.Floor(config.height*.30);
+
     let pointer = this.input.activePointer;
     if (pointer.isDown) {
         let touchX = pointer.x;
         let touchY = pointer.y;
-        if (touchX < player.x)
+        if (touchX < boundLft)
             move = "left";
-        else if (touchX > player.x)
+        else if (touchX > boundRgt)
             move = "right";
-        if (touchY < player.y)
+        if (touchY < boundTop
+            && touchX > boundLft
+            && touchX < boundRgt)
+        {
             jump = true;
+        }
     }
 
     if (move == "left")
