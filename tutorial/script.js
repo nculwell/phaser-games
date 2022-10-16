@@ -157,7 +157,7 @@ function update ()
         this.input.pointer3,
         this.input.pointer4,
     ];
-    for (const pointer in pointers)
+    for (const pointer of pointers)
     {
         if (pointer.isDown) {
             const touchX = pointer.x;
