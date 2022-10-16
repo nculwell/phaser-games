@@ -36,6 +36,8 @@ function preload ()
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.plugin('rexvirtualjoystickplugin',
+        'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js', true);
 }
 
 function create ()
@@ -114,6 +116,20 @@ function create ()
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+    //var joystick = this.plugins.get('rexvirtualjoystickplugin').addPlayer(this, config);
+
+    var joystick = scene.plugins.get('rexVirtualJoystick').add(scene, {
+        x: 200,
+        y: 200,
+        radius: 100,
+        //base: baseGameObject,
+        //thumb: thumbGameObject,
+        // dir: '8dir',
+        // forceMin: 16,
+        // fixed: true,
+        // enable: true
+    });
 }
 
 function update ()
@@ -124,6 +140,7 @@ function update ()
     }
 
     let move = "none";
+    let jump = false;
 
     if (cursors.left.isDown)
     {
@@ -133,18 +150,26 @@ function update ()
     {
         move = "right";
     }
-    else
+
+    if (player.body.touching.down)
     {
-        let pointer = scene.input.activePointer;
-        if (pointer.isDown) {
-            let touchX = pointer.x;
-            let touchY = pointer.y;
-            if (touchX < player.x)
-                move = "left";
-            else if (touchX > player.x)
-                move = "right";
+        if (cursors.up.isDown)
+        {
+          jump = true;
         }
     }
+
+    //let pointer = scene.input.activePointer;
+    //if (pointer.isDown) {
+    //    let touchX = pointer.x;
+    //    let touchY = pointer.y;
+    //    if (touchX < player.x)
+    //        move = "left";
+    //    else if (touchX > player.x)
+    //        move = "right";
+    //    if (touchY > player.y)
+    //        jump = true;
+    //}
 
     if (move == "left")
     {
@@ -162,20 +187,11 @@ function update ()
         player.anims.play('turn');
     }
 
-    let jump = false;
-
-    if (player.body.touching.down)
-    {
-        if (cursors.up.isDown)
-        {
-          jump = true;
-        }
-    }
-
     if (jump)
     {
         player.setVelocityY(-330);
     }
+
 }
 
 function collectStar (player, star)
