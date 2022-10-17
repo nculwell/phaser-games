@@ -246,8 +246,10 @@ function bombBounce(star, platform) {
 }
 
 function starBounce(star, platform) {
-    const sound = this.sound.add('star_bounce');
-    sound.play();
+    if (star.velocity.y != 0) {
+        const sound = this.sound.add('star_bounce');
+        sound.play();
+    }
 }
 
 function playerLand(star, platform) {
