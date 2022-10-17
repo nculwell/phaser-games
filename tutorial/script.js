@@ -246,7 +246,7 @@ function bombBounce(star, platform) {
 }
 
 function starBounce(star, platform) {
-    if (star.velocity.y != 0) {
+    if (star.body.velocity.y != 0) {
         const sound = this.sound.add('star_bounce');
         sound.play();
     }
