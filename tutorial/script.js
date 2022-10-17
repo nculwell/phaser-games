@@ -140,12 +140,9 @@ function update ()
         move = "right";
     }
 
-    if (player.body.touching.down)
+    if (cursors.up.isDown)
     {
-        if (cursors.up.isDown)
-        {
-          jump = true;
-        }
+        jump = true;
     }
 
     const boundLft = Math.floor(config.width*.30);
@@ -193,7 +190,7 @@ function update ()
         player.anims.play('turn');
     }
 
-    if (jump)
+    if (jump && player.body.touching.down)
     {
         player.setVelocityY(-330);
     }
