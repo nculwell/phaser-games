@@ -40,6 +40,7 @@ function preload ()
     this.load.audio('bomb_hit', 'assets/sound/bomb_hit.wav')
     this.load.audio('bomb_bounce', 'assets/sound/bomb_bounce.wav')
     this.load.audio('star_bounce', 'assets/sound/star_bounce.wav')
+    this.load.audio('star_grab', 'assets/sound/star_grab.wav')
 }
 
 function create ()
@@ -99,10 +100,8 @@ function create ()
     });
 
     stars.children.iterate(function (child) {
-
         //  Give each star a slightly different bounce
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
     });
 
     bombs = this.physics.add.group();
@@ -205,7 +204,8 @@ function collectStar (player, star)
     score += 10;
     scoreText.setText('Score: ' + score);
 
-    // TODO: play sound
+    const sound = this.sound.add('star_grab');
+    sound.play();
 
     if (stars.countActive(true) === 0)
     {
