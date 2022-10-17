@@ -247,7 +247,7 @@ function bombBounce(star, platform) {
 
 function starBounce(star, platform) {
     const vSpeed = Math.abs(star.body.velocity.y);
-    if (vSpeed < 20) {
+    if (vSpeed > 20) {
         const sound = this.sound.add('star_bounce');
         sound.play();
     }
