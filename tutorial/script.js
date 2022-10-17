@@ -36,6 +36,10 @@ function preload ()
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+
+    this.load.audio('bomb_hit', 'assets/sound/bomb_hit.wav')
+    this.load.audio('bomb_bounce', 'assets/sound/bomb_bounce.wav')
+    this.load.audio('star_bounce', 'assets/sound/star_bounce.wav')
 }
 
 function create ()
@@ -107,16 +111,14 @@ function create ()
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
     //  Collide the player and the stars with the platforms
-    this.physics.add.collider(player, platforms);
-    this.physics.add.collider(stars, platforms);
-    this.physics.add.collider(bombs, platforms);
+    this.physics.add.collider(player, platforms, playerLand, null, this);
+    this.physics.add.collider(stars, platforms, starBounce, null, this);
+    this.physics.add.collider(bombs, platforms, bombBounce, null, this);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
-
-
 }
 
 function update ()
@@ -206,6 +208,8 @@ function collectStar (player, star)
     score += 10;
     scoreText.setText('Score: ' + score);
 
+    // TODO: play sound
+
     if (stars.countActive(true) === 0)
     {
         //  A new batch of stars to collect
@@ -226,11 +230,27 @@ function collectStar (player, star)
     }
 }
 
-function hitBomb (player, bomb)
+function hitBomb(player, bomb)
 {
     this.physics.pause();
     player.setTint(0xff0000);
     player.anims.play('turn');
     gameOver = true;
+    const sound = this.sound.add('bomb_hit');
+    sound.play();
+}
+
+function bombBounce(star, platform) {
+    const sound = this.sound.add('bomb_bounce');
+    sound.play();
+}
+
+function starBounce(star, platform) {
+    const sound = this.sound.add('star_bounce');
+    sound.play();
+}
+
+function playerLand(star, platform) {
+    // TODO: play sound
 }
 
