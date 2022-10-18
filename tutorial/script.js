@@ -45,6 +45,8 @@ let cursors;
 let score = 0;
 let gameOver = false;
 let scoreText;
+let dpad;
+let buttons;
 
 function preload ()
 {
@@ -53,6 +55,8 @@ function preload ()
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('sidebar', '../shared/assets/sidebar_100x600.png');
+    this.load.image('dpad', '../shared/assets/gamepad-overlay-dpad-colors.png');
+    this.load.image('buttons', '../shared/assets/gamepad-overlay-buttons.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 
     this.load.audio('bomb_hit', 'assets/sound/bomb_hit.wav')
@@ -119,6 +123,14 @@ function create ()
         repeat: -1
     });
 
+    // On-screen controls
+    dpad = this.add.image(0, config.height-100, 'dpad');
+    buttons = this.add.image(config.width - sidebarSize.w, config.height-100, 'buttons');
+    if (!dpad.getLocalPoint)
+        dpad.getLocalPoint = polyfillGetLocalPoint(dpad);
+    if (!buttons.getLocalPoint)
+        buttons.getLocalPoint = polyfillGetLocalPoint(buttons);
+
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
     this.input.addPointer(3); // 4-touch
@@ -149,6 +161,13 @@ function create ()
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
+}
+
+function polyfillGetLocalPoint(object) {
+    return (x, y) => {
+        x: (x - object.x),
+        y: (y - object.y),
+    };
 }
 
 function update ()
@@ -191,6 +210,28 @@ function update ()
         if (pointer.isDown) {
             const touchX = pointer.x;
             const touchY = pointer.y;
+            if (dpad.getBounds().contains(touchX, touchY)) {
+                // identify dpad direction
+                const point = dpad.getLocalPoint(touchX, touchY);
+                const pixel = this.textures.getPixel(x, y, 'dpad');
+                if (pixel.r == 255 && pixel.g == 0 && pixel.b == 0)
+                    jump = true;
+                else if (pixel.r == 0 && pixel.g == 255 && pixel.b == 0)
+                    move = "right";
+                else if (pixel.r == 0 && pixel.g == 0 && pixel.b == 255)
+                    ; // down arrow does nothing
+                else if (pixel.r == 255 && pixel.g == 255 && pixel.b == 255)
+                    move = "left";
+            } else if (buttons.getBounds().contains(touchX, touchY)) {
+                // identify button among buttons
+                const point = buttons.getLocalPoint(touchX, touchY);
+                const pixel = this.textures.getPixel(x, y, 'buttons');
+                if (pixel.r > 0)
+                    jump = true;
+                else if (pixel.r == 0 && pixel.g == 0 && pixel.b > 0)
+                    jump = true;
+            }
+            /*
             if (touchX < boundLft)
                 move = "left";
             else if (touchX > boundRgt)
@@ -201,6 +242,7 @@ function update ()
             {
                 jump = true;
             }
+            */
         }
     }
 
