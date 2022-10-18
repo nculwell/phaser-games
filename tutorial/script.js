@@ -46,14 +46,15 @@ function preload ()
 function create ()
 {
     //  A simple background for our game
-    this.add.image(400, 300, 'sky');
+    (this.add.image(config.width/2, config.height/2, 'sky')
+        .setScale(config.width/800).refreshBody());
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
 
     //  Here we create the ground.
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    platSize = { w: 400, h: 32 }
+    const platSize = { w: 400, h: 32 }
     (platforms
         .create(config.width/2, config.height-32, 'ground')
         .setScale(config.width/platSize.w)
