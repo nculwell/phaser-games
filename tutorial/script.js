@@ -146,7 +146,10 @@ function create ()
     this.input.addPointer(3); // 4-touch
 
     // Fullscreen
-    dpad.setInteractive().on('pointerdown', () => this.scale.startFullscreen());
+    dpad.setInteractive().on('pointerdown', () => {
+        this.scale.lockOrientation("landscape");
+        this.scale.startFullscreen();
+    });
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
