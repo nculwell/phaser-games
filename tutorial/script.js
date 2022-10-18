@@ -65,7 +65,7 @@ function create ()
 {
 
     //  A simple background for our game
-    this.add.image(playArea.center.x, center.y, 'sky');
+    this.add.image(playArea.center.x, playArea.center.y, 'sky');
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
