@@ -73,10 +73,7 @@ function create ()
     //  Here we create the ground.
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
     const platSize = { w: 400, h: 32 };
-    platforms
-        .create(playArea.center.x, config.height-platSize.h, 'ground')
-        .setScale(config.width/platSize.w)
-        .refreshBody();
+    platforms .create(playArea.center.x, config.height-platSize.h, 'ground') .setScale(config.width/platSize.w) .refreshBody();
 
     //  Now let's create some ledges
     platforms.create(playArea.left + 400, 600, 'ground');
