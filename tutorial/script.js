@@ -65,7 +65,7 @@ function create ()
 {
 
     //  A simple background for our game
-    this.add.image(center.x, center.y, 'sky');
+    this.add.image(playArea.playArea.center.x, center.y, 'sky');
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
@@ -74,7 +74,7 @@ function create ()
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
     const platSize = { w: 400, h: 32 };
     platforms
-        .create(center.x, config.height-platSize.h, 'ground')
+        .create(playArea.center.x, config.height-platSize.h, 'ground')
         .setScale(config.width/platSize.w)
         .refreshBody();
 
@@ -248,9 +248,9 @@ function nextLevel()
         child.enableBody(true, child.x, 0, true, true);
     });
 
-    var x = (player.x < center.x)
-        ? Phaser.Math.Between(center.x, playArea.right)
-        : Phaser.Math.Between(playArea.left, center.x);
+    var x = (player.x < playArea.center.x)
+        ? Phaser.Math.Between(playArea.center.x, playArea.right)
+        : Phaser.Math.Between(playArea.left, playArea.center.x);
 
     var bomb = bombs.create(x, 16, 'bomb');
     bomb.setBounce(1);
