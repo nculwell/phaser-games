@@ -85,7 +85,8 @@ function create ()
 
     // Sidebars
     // (these aren't really platforms but it's useful to add them here)
-    const sidebars = this.physics.add.staticGroup();
+    //const sidebars = this.physics.add.staticGroup();
+    const sidebars = platforms;
     const sidebarCenterX = Math.floor(sidebarSize.w / 2);
     sidebars.create(sidebarCenterX, config.height/2, 'sidebar');
     sidebars.create(config.width - sidebarCenterX, config.height/2, 'sidebar');
