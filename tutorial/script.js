@@ -4,6 +4,8 @@ const config = {
     type: Phaser.AUTO,
     width: 1000,
     height: 600,
+    controlWidthL: 100,
+    controlWidthR: 100,
     physics: {
         default: 'arcade',
         arcade: {
@@ -35,6 +37,7 @@ function preload ()
     this.load.image('ground', 'assets/platform.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
+    this.load.image('sidebar', '../shared/assets/sidebar_100x600.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 
     this.load.audio('bomb_hit', 'assets/sound/bomb_hit.wav')
@@ -45,9 +48,15 @@ function preload ()
 
 function create ()
 {
+    const playWidth = config.width - config.controlWidthL - config.controlWidthR;
+    const playOffset = config.controlWidthL;
+    const center = {
+        x: Math.floor(playOffset + playWidth/2),
+        y: Math.floor(config.height/2),
+    };
+
     //  A simple background for our game
-    (this.add.image(config.width/2, config.height/2, 'sky')
-        .setScale(config.width/800));
+    this.add.image(center.x, center.y, 'sky');
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
@@ -61,9 +70,13 @@ function create ()
         .refreshBody());
 
     //  Now let's create some ledges
-    platforms.create(config.width-platSize.x, 600, 'ground');
-    platforms.create(50, 250, 'ground');
-    platforms.create(750, 220, 'ground');
+    platforms.create(playOffset + 400, 600, 'ground');
+    platforms.create(playOffset + 50, 250, 'ground');
+    platforms.create(playOffset + 750, 220, 'ground');
+
+    // Sidebars
+    platforms.create(config.controlWidthL/2, config.height/2, 'sidebar');
+    platforms.create(config.width - config.controlWidthR/2, config.height/2, 'sidebar');
 
     // The player and its settings
     player = this.physics.add.sprite(100, 450, 'dude');
