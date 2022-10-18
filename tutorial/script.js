@@ -54,7 +54,7 @@ function create ()
 
     //  Here we create the ground.
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    const platSize = { w: 400, h: 32 }
+    const platSize = { w: 400, h: 32 };
     (platforms
         .create(config.width/2, config.height-32, 'ground')
         .setScale(config.width/platSize.w)
