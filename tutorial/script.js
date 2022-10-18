@@ -20,6 +20,14 @@ const config = {
     }
 };
 
+const playWidth = config.width - config.controlWidthL - config.controlWidthR;
+const leftEdge = config.controlWidthL;
+const rightEdge = config.width - config.controlWidthR;
+const center = {
+    x: Math.floor(leftEdge + playWidth/2),
+    y: Math.floor(config.height/2),
+};
+
 var player;
 var stars;
 var bombs;
@@ -48,12 +56,6 @@ function preload ()
 
 function create ()
 {
-    const playWidth = config.width - config.controlWidthL - config.controlWidthR;
-    const playOffset = config.controlWidthL;
-    const center = {
-        x: Math.floor(playOffset + playWidth/2),
-        y: Math.floor(config.height/2),
-    };
 
     //  A simple background for our game
     this.add.image(center.x, center.y, 'sky');
@@ -70,16 +72,16 @@ function create ()
         .refreshBody());
 
     //  Now let's create some ledges
-    platforms.create(playOffset + 400, 600, 'ground');
-    platforms.create(playOffset + 50, 250, 'ground');
-    platforms.create(playOffset + 750, 220, 'ground');
+    platforms.create(leftEdge + 400, 600, 'ground');
+    platforms.create(leftEdge + 50, 250, 'ground');
+    platforms.create(leftEdge + 750, 220, 'ground');
 
     // Sidebars
     platforms.create(config.controlWidthL/2, config.height/2, 'sidebar');
     platforms.create(config.width - config.controlWidthR/2, config.height/2, 'sidebar');
 
     // The player and its settings
-    player = this.physics.add.sprite(100, 450, 'dude');
+    player = this.physics.add.sprite(leftEdge + 100, 450, 'dude');
 
     //  Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
@@ -114,7 +116,7 @@ function create ()
     stars = this.physics.add.group({
         key: 'star',
         repeat: 11,
-        setXY: { x: 12, y: 0, stepX: 70 }
+        setXY: { x: leftEdge + 12, y: 0, stepX: 70 }
     });
 
     stars.children.iterate(function (child) {
@@ -125,7 +127,7 @@ function create ()
     bombs = this.physics.add.group();
 
     //  The score
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(leftEdge + 16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms, playerLand, null, this);
@@ -226,23 +228,25 @@ function collectStar (player, star)
     sound.play();
 
     if (stars.countActive(true) === 0)
-    {
-        //  A new batch of stars to collect
-        stars.children.iterate(function (child) {
-            child.enableBody(true, child.x, 0, true, true);
-        });
+        nextLevel();
+}
 
-        var x = (player.x < 400)
-            ? Phaser.Math.Between(400, 800)
-            : Phaser.Math.Between(0, 400);
+function nextLevel()
+{
+    //  A new batch of stars to collect
+    stars.children.iterate(function (child) {
+        child.enableBody(true, child.x, 0, true, true);
+    });
 
-        var bomb = bombs.create(x, 16, 'bomb');
-        bomb.setBounce(1);
-        bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        bomb.allowGravity = false;
+    var x = (player.x < center.x)
+        ? Phaser.Math.Between(center.x, rightEdge)
+        : Phaser.Math.Between(leftEdge, center.x);
 
-    }
+    var bomb = bombs.create(x, 16, 'bomb');
+    bomb.setBounce(1);
+    bomb.setCollideWorldBounds(true);
+    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    bomb.allowGravity = false;
 }
 
 function hitBomb(player, bomb)
