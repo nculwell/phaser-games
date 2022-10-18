@@ -1,5 +1,20 @@
 // vim: et ts=8 sts=4 sw=4
 
+// Screen dimensions and layout
+const sidebarSize = { w: 100, h: 600 }
+const playArea = {
+    x: sidebarSize.w,
+    y: 0,
+    w: 800,
+    h: 600,
+};
+playArea.left = playArea.x;
+playArea.right = playArea.x + playArea.w;
+playArea.center = {
+    x: Math.floor(playArea.x + playArea.w/2),
+    y: Math.floor(playArea.y + playArea.h/2),
+};
+
 const config = {
     type: Phaser.AUTO,
     width: 1000,
@@ -20,24 +35,16 @@ const config = {
     }
 };
 
-const playWidth = config.width - config.controlWidthL - config.controlWidthR;
-const leftEdge = config.controlWidthL;
-const rightEdge = config.width - config.controlWidthR;
-const center = {
-    x: Math.floor(leftEdge + playWidth/2),
-    y: Math.floor(config.height/2),
-};
+const game = new Phaser.Game(config);
 
-var player;
-var stars;
-var bombs;
-var platforms;
-var cursors;
-var score = 0;
-var gameOver = false;
-var scoreText;
-
-var game = new Phaser.Game(config);
+let player;
+let stars;
+let bombs;
+let platforms;
+let cursors;
+let score = 0;
+let gameOver = false;
+let scoreText;
 
 function preload ()
 {
@@ -66,22 +73,25 @@ function create ()
     //  Here we create the ground.
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
     const platSize = { w: 400, h: 32 };
-    (platforms
-        .create(config.width/2, config.height-32, 'ground')
+    platforms
+        .create(center.x, config.height-platSize.h, 'ground')
         .setScale(config.width/platSize.w)
-        .refreshBody());
+        .refreshBody();
 
     //  Now let's create some ledges
-    platforms.create(leftEdge + 400, 600, 'ground');
-    platforms.create(leftEdge + 50, 250, 'ground');
-    platforms.create(leftEdge + 750, 220, 'ground');
+    platforms.create(playArea.left + 400, 600, 'ground');
+    platforms.create(playArea.left + 50, 250, 'ground');
+    platforms.create(playArea.left + 750, 220, 'ground');
 
     // Sidebars
-    platforms.create(config.controlWidthL/2, config.height/2, 'sidebar');
-    platforms.create(config.width - config.controlWidthR/2, config.height/2, 'sidebar');
+    // (these aren't really platforms but it's useful to add them here)
+    const sidebars = this.physics.add.staticGroup();
+    const sidebarCenterX = Math.floor(sidebarSize.w / 2);
+    sidebars.create(sidebarCenterX, config.height/2, 'sidebar');
+    sidebars.create(config.width - sidebarCenterX, config.height/2, 'sidebar');
 
     // The player and its settings
-    player = this.physics.add.sprite(leftEdge + 100, 450, 'dude');
+    player = this.physics.add.sprite(playArea.left + 100, 450, 'dude');
 
     //  Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
@@ -116,7 +126,7 @@ function create ()
     stars = this.physics.add.group({
         key: 'star',
         repeat: 11,
-        setXY: { x: leftEdge + 12, y: 0, stepX: 70 }
+        setXY: { x: playArea.left + 12, y: 0, stepX: 70 }
     });
 
     stars.children.iterate(function (child) {
@@ -127,7 +137,7 @@ function create ()
     bombs = this.physics.add.group();
 
     //  The score
-    scoreText = this.add.text(leftEdge + 16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(playArea.left + 16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms, playerLand, null, this);
@@ -239,8 +249,8 @@ function nextLevel()
     });
 
     var x = (player.x < center.x)
-        ? Phaser.Math.Between(center.x, rightEdge)
-        : Phaser.Math.Between(leftEdge, center.x);
+        ? Phaser.Math.Between(center.x, playArea.right)
+        : Phaser.Math.Between(playArea.left, center.x);
 
     var bomb = bombs.create(x, 16, 'bomb');
     bomb.setBounce(1);
