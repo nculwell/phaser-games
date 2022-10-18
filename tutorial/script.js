@@ -32,7 +32,17 @@ const config = {
         preload: preload,
         create: create,
         update: update
-    }
+    },
+    scale: {
+        parent: "game",
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        min: {
+            width: 1000,
+            height: 600,
+        },
+        zoom: 1,
+    },
 };
 
 const game = new Phaser.Game(config);
@@ -134,6 +144,9 @@ function create ()
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
     this.input.addPointer(3); // 4-touch
+
+    // Fullscreen
+    dpad.setInteractive().on('pointerdown', () => this.scale.startFullscreen());
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
