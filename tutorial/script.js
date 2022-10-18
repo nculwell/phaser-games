@@ -124,8 +124,8 @@ function create ()
     });
 
     // On-screen controls
-    dpad = this.add.image(0, config.height-100, 'dpad');
-    buttons = this.add.image(config.width - sidebarSize.w, config.height-100, 'buttons');
+    dpad = this.add.image(50, config.height-50, 'dpad');
+    buttons = this.add.image(config.width - 50, config.height-50, 'buttons');
     if (!dpad.getLocalPoint)
         dpad.getLocalPoint = polyfillGetLocalPoint(dpad);
     if (!buttons.getLocalPoint)
@@ -161,13 +161,6 @@ function create ()
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
-}
-
-function polyfillGetLocalPoint(object) {
-    return (x, y) => {
-        x: (x - object.x),
-        y: (y - object.y),
-    };
 }
 
 function update ()
@@ -213,19 +206,19 @@ function update ()
             if (dpad.getBounds().contains(touchX, touchY)) {
                 // identify dpad direction
                 const point = dpad.getLocalPoint(touchX, touchY);
-                const pixel = this.textures.getPixel(x, y, 'dpad');
+                const pixel = this.textures.getPixel(point.x, point.y, 'dpad');
                 if (pixel.r == 255 && pixel.g == 0 && pixel.b == 0)
                     jump = true;
                 else if (pixel.r == 0 && pixel.g == 255 && pixel.b == 0)
                     move = "right";
                 else if (pixel.r == 0 && pixel.g == 0 && pixel.b == 255)
                     ; // down arrow does nothing
-                else if (pixel.r == 255 && pixel.g == 255 && pixel.b == 255)
+                else if (pixel.r == 255 && pixel.g == 255 && pixel.b == 0)
                     move = "left";
             } else if (buttons.getBounds().contains(touchX, touchY)) {
                 // identify button among buttons
                 const point = buttons.getLocalPoint(touchX, touchY);
-                const pixel = this.textures.getPixel(x, y, 'buttons');
+                const pixel = this.textures.getPixel(point.x, point.y, 'buttons');
                 if (pixel.r > 0)
                     jump = true;
                 else if (pixel.r == 0 && pixel.g == 0 && pixel.b > 0)
@@ -327,5 +320,15 @@ function starBounce(star, platform) {
 
 function playerLand(star, platform) {
     // TODO: play sound
+}
+
+function polyfillGetLocalPoint(object) {
+    return (ptX, ptY) => {
+        const tl = object.getTopLeft();
+        return {
+            x: (ptX - tl.x),
+            y: (ptY - tl.y)
+        };
+    }
 }
 
