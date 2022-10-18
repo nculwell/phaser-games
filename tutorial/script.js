@@ -47,7 +47,7 @@ function create ()
 {
     //  A simple background for our game
     (this.add.image(config.width/2, config.height/2, 'sky')
-        .setScale(config.width/800).refreshBody());
+        .setScale(config.width/800));
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
