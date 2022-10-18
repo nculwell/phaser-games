@@ -2,7 +2,7 @@
 
 const config = {
     type: Phaser.AUTO,
-    width: 800,
+    width: 1000,
     height: 600,
     physics: {
         default: 'arcade',
@@ -53,10 +53,14 @@ function create ()
 
     //  Here we create the ground.
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+    platSize = { w: 400, h: 32 }
+    (platforms
+        .create(config.width/2, config.height-32, 'ground')
+        .setScale(config.width/platSize.w)
+        .refreshBody());
 
     //  Now let's create some ledges
-    platforms.create(600, 400, 'ground');
+    platforms.create(config.width-platSize.x, 600, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
 
